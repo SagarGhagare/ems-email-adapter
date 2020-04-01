@@ -33,6 +33,8 @@ import org.junit.Test;
 
 public class HTMLReportTransformerTest {
 
+  public static final String OUTPUT_PATH = "src/test/resources/output.html";
+
   private HTMLReportTransformer htmlReportTransformer;
 
   @Before
@@ -45,13 +47,13 @@ public class HTMLReportTransformerTest {
     EncounterReport encounterReport = buildEncounterReport();
     String html = htmlReportTransformer.transform(encounterReport);
 
-    FileUtils.write(new File("src/test/resources/output.html"), html, StandardCharsets.UTF_8);
+    FileUtils.write(new File(OUTPUT_PATH), html, StandardCharsets.UTF_8);
   }
 
   private EncounterReport buildEncounterReport() {
     Bundle bundle = new Bundle();
     bundle.getMeta().setLastUpdated(Date.from(LocalDateTime.of(
-        2020, 04, 01,
+        2020, 9, 1,
         15, 32, 0, 0)
         .toInstant(ZoneOffset.UTC)));
 
