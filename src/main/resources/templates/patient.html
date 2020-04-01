@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<body>
+<div id="patientBanner" class="banner" th:fragment="patient">
+  <table>
+    <tbody>
+    <tr>
+      <td th:text="${report.patient.name}"></td>
+      <td align="right">
+        <span class="label"> Born </span><span th:text="${report.patient.born}"></span></td>
+      <td align="right">
+        <span class="label"> Gender </span><span th:text="${report.patient.gender}"></span></td>
+      <td>
+        <div th:each="identifier: ${report.patient.identifiers}">
+          <div th:if="${identifier.verified}">
+            <span class="label"> Verified NHS No. </span><span
+              th:text="${identifier.nhsNumber}"></span><br/>
+          </div>
+          <div th:if="${identifier.unverified}">
+            <span class="label"> Unverified NHS No. </span><span
+              th:text="${identifier.nhsNumber}"></span><br/>
+          </div>
+          <div th:if="${identifier.local}">
+            <span class="label"> Local Patient ID </span><span th:text="${identifier.value}"></span><br/>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <table class="header">
+    <tbody>
+    <tr>
+      <td th:each="address: ${report.patient.address}">
+        <p class="label" th:text="${address.use.display}+' Address'">Address</p>
+        <p>
+        <div th:each="line: ${address.line}">
+          <span th:text="${line}"></span>
+        </div>
+        </p>
+      </td>
+      <td>
+        <div th:each="telecom: ${report.patient.telecom}">
+          <span class="label" th:text="${telecom.use.display}+' '+${telecom.system.display}">Telecom</span>
+          <span th:text="${telecom.value}"></span>
+        </div>
+      </td>
+      <td th:each="gp: ${report.patient.generalPractitioner}">
+        <p class="label" th:if="${gp.organization}">GP Practice</p>
+        <p class="label" th:if="${gp.practitioner}">GP</p>
+        <p th:text="${gp.name}"></p>
+        <p>
+        <div th:each="line: ${gp.address.line}">
+          <span th:text="${line}"></span>
+        </div>
+        </p>
+        <p>
+        <div th:each="telecom: ${gp.telecom}">
+          <span class="label" th:text="${telecom.system.display}">Telecom</span>
+          <span th:text="${telecom.value}"></span>
+        </div>
+        </p>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
