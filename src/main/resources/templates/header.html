@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<body>
+<div th:fragment="header">
+  <div class="header">
+    <table class="header">
+      <tr>
+        <th class="header">Document Created</th>
+        <td class="header" th:text="${report.created}"></td>
+      </tr>
+      <tr>
+        <th class="header">Document Owner</th>
+        <td class="header" th:text="${report.owner}"></td>
+      </tr>
+      <tr todo>
+        <th class="header">Authored by</th>
+        <td class="header">Mary Jones - Nurse Triage Practitioner, Medway NHS Foundation Trust on 01-Jan-2017, 20:00</td>
+      </tr>
+      <tr>
+        <th class="header" valign="top">Consent Status</th>
+        <td class="header" th:text="${report.consentStatus}"></td>
+      </tr>
+    </table>
+  </div>
+</div>
+</body>
+</html>
