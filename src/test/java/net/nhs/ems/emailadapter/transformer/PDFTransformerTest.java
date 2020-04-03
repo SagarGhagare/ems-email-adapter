@@ -30,7 +30,7 @@ public class PDFTransformerTest {
     if (!inputFile.exists()) {
       HTMLReportTransformerTest reportTransformerTest = new HTMLReportTransformerTest();
       reportTransformerTest.setup();
-      reportTransformerTest.transformEmptyReport();
+      reportTransformerTest.transformReport();
     }
 
     return FileUtils.readFileToString(inputFile, StandardCharsets.UTF_8);
