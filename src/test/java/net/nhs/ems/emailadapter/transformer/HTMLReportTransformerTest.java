@@ -22,11 +22,15 @@ import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointSystem;
 import org.hl7.fhir.dstu3.model.ContactPoint.ContactPointUse;
 import org.hl7.fhir.dstu3.model.Encounter;
+import org.hl7.fhir.dstu3.model.Encounter.EncounterStatus;
 import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
+import org.hl7.fhir.dstu3.model.EpisodeOfCare;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.NHSNumberIdentifier;
 import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +52,13 @@ public class HTMLReportTransformerTest {
     String html = htmlReportTransformer.transform(encounterReport);
 
     FileUtils.write(new File(OUTPUT_PATH), html, StandardCharsets.UTF_8);
+  }
+
+  private java.util.Date date(int month, int day, int hour, int minute) {
+    return Date.from(LocalDateTime.of(
+        2020, month, day,
+        hour, minute, 0, 0)
+        .toInstant(ZoneOffset.UTC));
   }
 
   private EncounterReport buildEncounterReport() {
@@ -105,9 +116,30 @@ public class HTMLReportTransformerTest {
         .setFullUrl("Patient/1")
         .setResource(patient));
 
+    Practitioner practitioner = new Practitioner()
+        .addName(new HumanName()
+            .addPrefix("Dr")
+            .setFamily("Frankenstein"));
+    practitioner.setId("1");
+    bundle.addEntry(new BundleEntryComponent()
+        .setFullUrl("Practitioner/1")
+        .setResource(practitioner));
+
+    EpisodeOfCare episodeOfCare = new EpisodeOfCare()
+        .setCareManager(new Reference("Practitioner/1"));
+    episodeOfCare.setId("1");
+    bundle.addEntry(new BundleEntryComponent()
+        .setFullUrl("EpisodeOfCare/1")
+        .setResource(episodeOfCare));
+
     Encounter encounter = new Encounter()
+        .addEpisodeOfCare(new Reference("EpisodeOfCare/1"))
+        .setStatus(EncounterStatus.FINISHED)
         .setSubject(new Reference("Patient/1"))
-        .setServiceProvider(new Reference("Organization/1"));
+        .setServiceProvider(new Reference("Organization/1"))
+        .setPeriod(new Period()
+            .setStart(date(4, 1, 13, 0))
+            .setEnd(date(4, 1, 14, 32)));
     encounter.setId("1");
     bundle.addEntry(new BundleEntryComponent()
         .setFullUrl("Encounter/1")
@@ -116,7 +148,10 @@ public class HTMLReportTransformerTest {
     Consent consent = new Consent()
         .addConsentingParty(new Reference("Patient/1"))
         .addAction(new CodeableConcept().addCoding(
-            new Coding("", "ptv", "Permission to view")));
+            new Coding("", "ptv", "Permission to view")))
+        .setPeriod(new Period()
+            .setStart(date(1, 1, 0, 0))
+            .setEnd(date(12, 31, 23, 59)));
     consent.setId("1");
     bundle.addEntry(new BundleEntryComponent()
         .setFullUrl("Consent/1")

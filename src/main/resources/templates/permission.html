@@ -1,21 +1,21 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://www.thymeleaf.org">
 <body>
-<div todo th:fragment="permissionToView">
+<div th:fragment="permissionToView">
   <h1>Permission to View</h1>
   <table>
     <tbody>
     <tr>
       <th class="default">Permission to view outcome</th>
-      <td>Permission to view obtained</td>
+      <td th:text="${report.consentStatus}"></td>
     </tr>
     <tr>
       <th class="default">Date obtained</th>
-      <td>01-Jan-2017, 20:00</td>
+      <td th:text="${report.consentObtained}"></td>
     </tr>
     <tr>
       <th class="default">Date expires</th>
-      <td>15-Jan-2017, 20:00</td>
+      <td th:text="${report.consentExpires}"></td>
     </tr>
     </tbody>
   </table>
