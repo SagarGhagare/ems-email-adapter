@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import net.nhs.ems.emailadapter.util.DateUtil;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.hl7.fhir.dstu3.model.Address;
 import org.hl7.fhir.dstu3.model.ContactPoint;
 import org.hl7.fhir.dstu3.model.Patient;
@@ -63,13 +62,13 @@ public class PatientModel {
         .orElseGet(Collections::emptyList);
   }
 
-  public List<GPModel> getGeneralPractitioner() {
+  public List<? extends GPModel<?>> getGeneralPractitioner() {
     return patient.filter(Patient::hasGeneralPractitioner)
         .map(patient -> patient.getGeneralPractitioner().stream()
             .map(ref -> encounterReport.find(Resource.class, ref))
             .filter(Optional::isPresent)
             .map(Optional::get)
-            .map(gp -> new GPModel(encounterReport, gp))
+            .map(gp -> GPModel.from(encounterReport, gp))
             .collect(Collectors.toList())
         ).orElseGet(Collections::emptyList);
   }

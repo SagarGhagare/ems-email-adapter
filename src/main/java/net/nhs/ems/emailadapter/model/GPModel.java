@@ -8,12 +8,12 @@ import org.hl7.fhir.dstu3.model.Organization;
 import org.hl7.fhir.dstu3.model.Practitioner;
 import org.hl7.fhir.dstu3.model.Resource;
 
-public class GPModel {
+public abstract class GPModel<T extends Resource> {
 
-  private EncounterReport encounterReport;
-  private Resource gp;
+  protected EncounterReport encounterReport;
+  protected T gp;
 
-  public GPModel(EncounterReport encounterReport, Resource gp) {
+  public GPModel(EncounterReport encounterReport, T gp) {
     this.encounterReport = encounterReport;
     this.gp = gp;
   }
@@ -26,32 +26,78 @@ public class GPModel {
     return gp instanceof Practitioner;
   }
 
-  public String getName() {
+  public abstract String getName();
+
+  public abstract Address getAddress();
+
+  public abstract List<ContactPoint> getTelecom();
+
+  public static GPModel<?> from(EncounterReport encounterReport, Resource gp) {
     if (gp instanceof Organization) {
-      return ((Organization) gp).getName();
+      return new OrganizationGP(encounterReport, (Organization) gp);
     } else if (gp instanceof Practitioner) {
-      return ((Practitioner) gp).getNameFirstRep().getNameAsSingleString();
+      return new PractitionerGP(encounterReport, (Practitioner) gp);
     } else {
+      return new UnknownGP<>(encounterReport, gp);
+    }
+  }
+
+  private static class OrganizationGP extends GPModel<Organization> {
+
+    public OrganizationGP(EncounterReport encounterReport, Organization gp) {
+      super(encounterReport, gp);
+    }
+
+    public String getName() {
+      return gp.getName();
+    }
+
+    public Address getAddress() {
+      return gp.getAddressFirstRep();
+    }
+
+    public List<ContactPoint> getTelecom() {
+      return gp.getTelecom();
+    }
+  }
+
+  private static class PractitionerGP extends GPModel<Practitioner> {
+
+    public PractitionerGP(EncounterReport encounterReport, Practitioner gp) {
+      super(encounterReport, gp);
+    }
+
+    public String getName() {
+      return gp.getNameFirstRep().getNameAsSingleString();
+    }
+
+    public Address getAddress() {
+      return gp.getAddressFirstRep();
+    }
+
+    public List<ContactPoint> getTelecom() {
+      return gp.getTelecom();
+    }
+  }
+
+  private static class UnknownGP<T extends Resource> extends GPModel<T> {
+
+    public UnknownGP(EncounterReport encounterReport, T gp) {
+      super(encounterReport, gp);
+    }
+
+    @Override
+    public String getName() {
       return "Unknown";
     }
-  }
 
-  public Address getAddress() {
-    if (gp instanceof Organization) {
-      return ((Organization) gp).getAddressFirstRep();
-    } else if (gp instanceof Practitioner) {
-      return ((Practitioner) gp).getAddressFirstRep();
-    } else {
-      return null;
+    @Override
+    public Address getAddress() {
+      return new Address();
     }
-  }
 
-  public List<ContactPoint> getTelecom() {
-    if (gp instanceof Organization) {
-      return ((Organization) gp).getTelecom();
-    } else if (gp instanceof Practitioner) {
-      return ((Practitioner) gp).getTelecom();
-    } else {
+    @Override
+    public List<ContactPoint> getTelecom() {
       return Collections.emptyList();
     }
   }
