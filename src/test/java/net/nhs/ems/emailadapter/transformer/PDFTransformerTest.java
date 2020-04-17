@@ -10,6 +10,7 @@ import org.junit.Test;
 public class PDFTransformerTest {
 
   public static final String OUTPUT_PATH = "src/test/resources/output.pdf";
+  public static final String HTML_FILE = "src/test/resources/output.html";
 
   private PDFTransformer pdfTransformer;
 
@@ -26,13 +27,7 @@ public class PDFTransformerTest {
   }
 
   private String getInputHtml() throws IOException {
-    File inputFile = new File(HTMLReportTransformerTest.OUTPUT_PATH);
-    if (!inputFile.exists()) {
-      HTMLReportTransformerTest reportTransformerTest = new HTMLReportTransformerTest();
-      reportTransformerTest.setup();
-      reportTransformerTest.transformReport();
-    }
-
+    File inputFile = new File(HTML_FILE);
     return FileUtils.readFileToString(inputFile, StandardCharsets.UTF_8);
   }
 }
