@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -16,12 +15,9 @@ import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.amazonaws.regions.Regions;
@@ -89,7 +85,7 @@ public class EmailHandler implements RequestHandler<SNSEvent, Object> {
       var pdfData = new PDFTransformer().transform(Jsoup.parse(htmlString).html());
       stopwatch.finishStage("pdf transformation");
 
-      sendEmail(System.getenv(), pdfData, createFileName(Jsoup.parse(htmlString)));
+      sendEmail(System.getenv(), pdfData, Jsoup.parse(htmlString));
       stopwatch.finishStage("sending email");
 
     } catch (Exception e) {
@@ -101,22 +97,9 @@ public class EmailHandler implements RequestHandler<SNSEvent, Object> {
     return "SUCCESS";
   }
 
-  private String createFileName(Document doc) throws ParseException {
-    Element elementById = doc.getElementById("patientBanner");
-    Elements select = elementById.select("table").first().select("td");
-    String name = select.get(0).text().split(" ")[1];
-    String dobString = select.get(1).text().split(" ")[1];
-    SimpleDateFormat format2 = new SimpleDateFormat("dd-MMM-yyyy");
-    Date date = format2.parse(dobString);
-    String dob = DateFormatUtils.format(date, "YYYYMMdd");
-    String[] split = select.get(3).text().split(" ");
-    String nhsNumber = split[3] + split[4] + split[5];
-    return nhsNumber + "_" + name + "_" + dob + ".pdf";
-  }
-
-  private void sendEmail(Map<String, String> envVar, byte[] pdfData, String fileName)
-      throws MessagingException, IOException {
-    MimeMessage mimeMessage = emailBuilder.buildEmail(EmailSettings.from(envVar), fileName, pdfData);
+  private void sendEmail(Map<String, String> envVar, byte[] pdfData, Document document)
+      throws MessagingException, IOException, ParseException {
+    MimeMessage mimeMessage = emailBuilder.buildEmail(EmailSettings.from(envVar), document, pdfData);
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     mimeMessage.writeTo(outputStream);
     RawMessage rawMessage = new RawMessage(ByteBuffer.wrap(outputStream.toByteArray()));
