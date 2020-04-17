@@ -32,7 +32,8 @@
     <tbody>
     <tr>
       <td th:each="address: ${report.patient.address}">
-        <p class="label" th:text="${address.use.display}+' Address'">Address</p>
+        <!-- <p class="label" th:text="${address.use.display}+' Address'">Address</p>  -->
+        <p class="label">Home Address</p>
         <p>
         <div th:each="line: ${address.line}">
           <span th:text="${line}"></span>
@@ -41,16 +42,17 @@
       </td>
       <td>
         <div th:each="telecom: ${report.patient.telecom}">
-          <span class="label" th:text="${telecom.use.display}+' '+${telecom.system.display}">Telecom</span>
+          <!-- <span class="label" th:text="${telecom.use.display}+' '+${telecom.system.display}">Telecom</span> -->
+          <span class="label">Home Telecom</span>
           <span th:text="${telecom.value}"></span>
         </div>
       </td>
-      <td th:each="gp: ${report.patient.generalPractitioner}">
-        <p class="label" th:if="${gp.organization}">GP Practice</p>
-        <p class="label" th:if="${gp.practitioner}">GP</p>
-        <p th:text="${gp.name}"></p>
+      <td todo th:each="gp: ${report.patient.generalPractitioner}">
+        <p todo class="label" th:if="${gp.organization}">GP Practice</p>
+        <p todo class="label" th:if="${gp.practitioner}">GP</p>
+        <p todo th:text="${gp.name}"></p>
         <p>
-        <div th:each="line: ${gp.address.line}">
+        <div todo th:each="line: ${gp.address.line}">
           <span th:text="${line}"></span>
         </div>
         </p>

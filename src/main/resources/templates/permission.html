@@ -2,22 +2,22 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <body>
 <div th:fragment="permissionToView">
-  <h1>Permission to View</h1>
-  <table>
-    <tbody>
+  <h1 th:text="${report.section1Title}"></h1>
+  <table th:utext="${report.section1Text}">
+    <!-- <tbody>
     <tr>
       <th class="default">Permission to view outcome</th>
-      <td th:text="${report.consentStatus}"></td>
+      <td>Permission to view obtained</td>
     </tr>
     <tr>
       <th class="default">Date obtained</th>
-      <td th:text="${report.consentObtained}"></td>
+      <td>01-Jan-2017, 20:00</td>
     </tr>
     <tr>
       <th class="default">Date expires</th>
-      <td th:text="${report.consentExpires}"></td>
+      <td>15-Jan-2017, 20:00</td>
     </tr>
-    </tbody>
+    </tbody> -->
   </table>
 </div>
 </body>

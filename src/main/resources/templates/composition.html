@@ -1,41 +1,42 @@
 <!DOCTYPE HTML>
 <html xmlns:th="https://www.thymeleaf.org">
 <body>
-<div todo class="composition" th:fragment="composition">
-  <h1>Primary Reason for Call</h1>
-  Patient feels dizzy.
-  <h1>Clinical Summary</h1>
+<div class="composition" th:fragment="composition">
+  <h1 th:text="${report.section2Title}"></h1>
+  <small th:text="${report.section2Text}"></small>
+  
+  <h1 th:text="${report.section3Title}"></h1>
+  <small th:text="${report.section3Text}"></small>
 
-  Patient fels nausea and dizzy after waking up. Lasted 30 minutes.
-
-  <h1>Additional Patient Notes</h1>
-  Additional Patient Notes<br/>
-  Additional Patient Notes abc  01-Feb-2017, 12:00<br/>
-  These are more notes, nested under the top one.<h1>Disposition Details</h1>
-  Lie down.
-  <h1>Information and advice given</h1>
-  Do not perform any strenuous activities.
-  <h1>Recorded Allergies</h1>
-  No known allergies or adverse reaction.
-  <h1>Triage Report</h1>
-  An injury or other health problem was described.
+  <h1 th:text="${report.section4Title}"></h1>
+  <small th:text="${report.section4Text}"></small>
+  
+  <h1 th:text="${report.section5Title}"></h1>
+  <small th:text="${report.section5Text}"></small>
+  
+  <h1 th:text="${report.section6Title}"></h1>
+  <small th:text="${report.section6Text}"></small>
+  
+  <h1 th:text="${report.section7Title}"></h1>
+  <small th:text="${report.section7Text}"></small>
+  
+  
+  <h1 th:text="${report.section8Title}"></h1>
+  <small th:text="${report.section8Text}"></small>
+  <!-- An injury or other health problem was described.
   <br/>The individual was described as breathing and conscious.
   <br/>Loss of at least a mugful of blood in the last 30 minutes was not described.
   <br/>An illness or other health problem was described. - Dizziness
   <br/>Fighting for breath was not described.
   <br/>A heart attack, chest/upper back pain, recent probable stroke, recent fit/seizure or suicide attempt was not described as the main call reason.
   <br/>Dizziness and nausea was described.
-  <br/>
+  <br/>  -->
 
-  <h1>Prescribed Items</h1>
+  <h1 th:text="${report.section9Title}"></h1>
+  <small th:text="${report.section9Text}"></small>
 
-  Medications
-
-  <h1>Appointment Reference</h1>
-
-  Date/Time: 01 June 2017 14:00
-  Location: CENTRAL LONDON COMMUNITY HEALTHCARE NHS TRUST
-  Psychiatric Community Care Service
+  <h1 th:text="${report.appointmentDesc}"></h1>
+  <small th:text="${report.appointmentComment}">Appointment Comment</small>
 </div>
 </body>
 </html>

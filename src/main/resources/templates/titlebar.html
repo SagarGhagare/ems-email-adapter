@@ -33,20 +33,28 @@
         <tr todo>
           <th class="titlebar">Care Setting Address</th>
           <td class="titlebar">
-            <p class="label" th:text="${location.address.use.display}+' Address'">Address</p>
-            <p>2, Brancaster Road<br/>Medway<br/>ME5 4LS<br/>Follow the high street and turn left by
-              Boots<br/>GB<br/>Great Britain<br/>962145269574<br/>+38.265789-85.623415<br/>X575776,Y163180
+          <!-- <p class="label" th:text="${location.address.use.display}+' Address'">Address</p> -->
+            <p class="label">Visit Address</p>
+            <p><small th:text="${location.address.line}"/><br/>
+            <small th:text="${location.address.city}"/><br/>
+            <small th:text="${location.address.postalCode}"/><br/>
+            <small th:text="${location.address.text}"/><br/>
+            <small th:text="${location.address.country}"/><br/>
+            Great Britain<br/>
+            962145269574<br/>
+            +38.265789-85.623415<br/>
+            X575776,Y163180
             </p>
           </td>
         </tr>
         <tr todo>
           <th class="titlebar">Care Setting Type</th>
-          <td class="titlebar">Example Care Setting</td>
+          <td class="titlebar" th:text="${report.careSettingType}"></td>
         </tr>
       </th:block>
       <tr todo>
         <th class="titlebar">Responsible Party</th>
-        <td class="titlebar" th:text="${report.responsibleParty}"><br/>
+        <td class="titlebar" th:text="${report.responsibleParty}+'-'+${report.responsiblePartyOrg}"><br/>
         </td>
       </tr>
     </table>
