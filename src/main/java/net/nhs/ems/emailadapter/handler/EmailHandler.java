@@ -44,10 +44,15 @@ import net.nhs.ems.emailadapter.transformer.PDFTransformer;
 public class EmailHandler implements RequestHandler<SNSEvent, Object> {
 
   private OutgoingEmailBuilder emailBuilder = new OutgoingEmailBuilder();
-  private AmazonSimpleEmailServiceAsync ses = AmazonSimpleEmailServiceAsyncClient.asyncBuilder().build();
+  private AmazonSimpleEmailServiceAsync ses = AmazonSimpleEmailServiceAsyncClient.asyncBuilder().withRegion(Regions.EU_WEST_1).build();
   private AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build();
   protected Logger log = LoggerFactory.getLogger(getClass());
-
+  
+  public EmailHandler(AmazonS3 s3Client, AmazonSimpleEmailServiceAsync ses) {
+    this.s3Client = s3Client;
+    this.ses = ses;
+  }
+  
   public String handleRequest(SNSEvent request, Context context) {
     LambdaLogger logger = context.getLogger();
     var stopwatch = StagedStopwatch.start(logger);

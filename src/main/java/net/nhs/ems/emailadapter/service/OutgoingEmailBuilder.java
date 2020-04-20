@@ -47,15 +47,15 @@ public class OutgoingEmailBuilder {
   }
   
   private String createFileName(Document doc) throws ParseException {
-    Element elementById = doc.getElementById("patientBanner");
-    Elements select = elementById.select("table").first().select("td");
-    String name = select.get(0).text().split(" ")[1];
-    String dobString = select.get(1).text().split(" ")[1];
-    SimpleDateFormat format2 = new SimpleDateFormat("dd-MMM-yyyy");
-    Date date = format2.parse(dobString);
+    Element patientBanner = doc.getElementById("patientBanner");
+    Elements table = patientBanner.select("table").first().select("td");
+    String name = table.get(0).text().split(" ")[1];
+    String dobString = table.get(1).text().split(" ")[1];
+    SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+    Date date = format.parse(dobString);
     String dob = DateFormatUtils.format(date, "YYYYMMdd");
-    String[] split = select.get(3).text().split(" ");
-    String nhsNumber = split[3] + split[4] + split[5];
+    String[] dobArr = table.get(3).text().split(" ");
+    String nhsNumber = dobArr[3] + dobArr[4] + dobArr[5];
     return nhsNumber + "_" + name + "_" + dob + ".pdf";
   }
 }
