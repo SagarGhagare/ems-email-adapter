@@ -1,0 +1,28 @@
+version: 0.2
+
+env:
+  variables:
+    BUCKET_NAME: "ems-send-email-report-lambda-code"
+    BUCKET_KEY: "ems-email-adapter-0.0.1-SNAPSHOT.jar"
+    
+phases:
+  install:
+    runtime-versions:
+        java: openjdk11
+  build:
+    commands:
+      - mvn clean install
+      - echo Build completed on `date`
+      - export BUCKET=$BUCKET_NAME
+      - aws cloudformation package --template-file template.yml --s3-bucket $BUCKET --output-template-file outputtemplate.yml
+  post_build:
+    commands:
+      - ls
+      - cd target
+      - ls
+      - aws s3 cp ems-email-adapter-0.0.1-SNAPSHOT.jar s3://$BUCKET_NAME/$BUCKET_KEY
+artifacts:
+  type: zip 
+  files:
+    - template.yml
+    - outputtemplate.yml

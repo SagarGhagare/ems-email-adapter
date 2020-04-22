@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Send SES email with pdf attachment
+Resources:
+  LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+      - 'arn:aws:iam::410123189863:policy/service-role/AWSLambdaBasicExecutionRole-9d7426bd-e3f3-4721-91f1-0721d2e865b0'
+      - 'arn:aws:iam::aws:policy/CloudWatchFullAccess'
+      - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+      - 'arn:aws:iam::aws:policy/AmazonSESFullAccess'
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: email-handler-sgh
+      Role: !GetAtt
+        - LambdaExecutionRole
+        - Arn
+      Handler:      net.nhs.ems.emailadapter.handler.EmailHandler::handleRequest
+      Runtime:      java11
+      MemorySize:   512
+      Timeout:      60
+      Code: 
+        S3Bucket:   ems-send-email-report-lambda-code
+        S3Key:      ems-email-adapter-0.0.1-SNAPSHOT.jar
+      Environment:
+        Variables:
+          EMS_REPORT_BODY:      "See attached report."
+          EMS_REPORT_SUBJECT:   "IUCDS Pilot"
+          EMS_REPORT_RECIPIENT: "sagar.ghagare@nhs.net,fatih.ucar1@nhs.net,Stgh.las@nhs.net"
+          EMS_REPORT_SENDER:    "Encounter Reports <stgeorges@iucdspilot.uk>"
+  version:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      Description: v1
+  alias:
+    Type: AWS::Lambda::Alias
+    Properties:
+      FunctionName: !Ref LambdaFunction
+      FunctionVersion: !GetAtt version.Version
+      Name: LIVE
+  LambdaPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref LambdaFunction
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref SNSTopic
+  LambdaLogGroup:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${LambdaFunction}"
+      RetentionInDays: '7'
+  SNSTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      DisplayName: Email for St Georges
+      TopicName: ems-email-stgeorges
+      Subscription:
+      - Endpoint: !GetAtt
+        - LambdaFunction
+        - Arn
+        Protocol: lambda
