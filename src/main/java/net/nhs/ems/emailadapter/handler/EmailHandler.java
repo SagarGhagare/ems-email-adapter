@@ -48,6 +48,9 @@ public class EmailHandler implements RequestHandler<SNSEvent, Object> {
   private AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build();
   protected Logger log = LoggerFactory.getLogger(getClass());
   
+  public EmailHandler() {
+  }
+  
   public EmailHandler(AmazonS3 s3Client, AmazonSimpleEmailServiceAsync ses) {
     this.s3Client = s3Client;
     this.ses = ses;
