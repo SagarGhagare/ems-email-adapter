@@ -56,6 +56,6 @@ public class OutgoingEmailBuilder {
     String dob = DateFormatUtils.format(date, "YYYYMMdd");
     String[] dobArr = table.get(3).text().split(" ");
     String nhsNumber = dobArr[3] + dobArr[4] + dobArr[5];
-    return nhsNumber + "_" + name + "_" + dob;
+    return nhsNumber + "_" + name + "_" + dob + ".pdf";
   }
 }
