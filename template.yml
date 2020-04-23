@@ -1,5 +1,11 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Send SES email with pdf attachment
+
+Parameters:
+  versionId :
+    Type : 'AWS::SSM::Parameter::Value<String>'
+    Default: 'versionId'
+    
 Resources:
   LambdaExecutionRole:
     Type: 'AWS::IAM::Role'
@@ -28,8 +34,9 @@ Resources:
       MemorySize:   512
       Timeout:      60
       Code: 
-        S3Bucket:   ems-send-email-report-lambda-code
-        S3Key:      ems-email-adapter-0.0.1-SNAPSHOT.jar
+        S3Bucket:           ems-send-email-report-lambda-code
+        S3Key:              ems-email-adapter-0.0.1-SNAPSHOT.jar
+        S3ObjectVersion:    !Ref versionId
       Environment:
         Variables:
           EMS_REPORT_BODY:      "See attached report."
