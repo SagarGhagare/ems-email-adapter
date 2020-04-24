@@ -1,0 +1,24 @@
+$source_profile = "default"
+$region = "eu-west-1"
+$mfa_serial = "{MFA_USER_ARN}"
+$role_arn = "arn:aws:iam::410123189863:role/NHSDAdminRole"
+$target_profile = "test"
+$target_profile_path =  "$HOME\.aws\credentials"
+$session_name = "test"
+
+# Get token code 
+$token_code = Read-Host -Prompt 'Enter MFA token:'
+
+# Assume Role
+$Response = (Use-STSRole -Region $region -RoleArn  $role_arn -RoleSessionName $session_name -ProfileName $source_profile -SerialNumber $mfa_serial -TokenCode $token_code).Credentials
+
+# Export Crendentail as environment variable
+$env:AWS_ACCESS_KEY_ID=$Response.AccessKeyId
+$env:AWS_SECRET_ACCESS_KEY=$Response.SecretAccessKey
+$env:AWS_SESSION_TOKEN=$Response.SessionToken
+
+# Create Profile with Credentials
+Set-AWSCredential -StoreAs $target_profile -ProfileLocation $target_profile_path -AccessKey $Response.AccessKeyId -SecretKey $Response.SecretAccessKey -SessionToken $Response.SessionToken
+
+# Print expiration time
+Write-Host("Credentials will expire at: " + $Response.Expiration)
