@@ -1,7 +1,7 @@
 $source_profile = "default"
 $region = "eu-west-1"
 $mfa_serial = "{MFA_USER_ARN}"
-$role_arn = "{ROLE_ARN}"
+$role_arn = "arn:aws:iam::410123189863:role/NHSDAdminRole"
 $target_profile = "test"
 $target_profile_path =  "$HOME\.aws\credentials"
 $session_name = "test"
