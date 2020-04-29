@@ -1,10 +1,8 @@
 # EMS Email Adapter
 ## Running
-This service implements an AWS Lambda function to accept incoming emails and dispatch an XML attachment
-to the 111 Report transformer service.
+This service implements an AWS Lambda function to accept incoming emails with html.
 
-It also accepts a FHIR Encounter Report bundle for transformation into a PDF report, and emails it
-to a fixed recipient.
+It also send email with PDF report to a fixed recipient.
 
 ## Licence
 
