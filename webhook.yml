@@ -1,0 +1,20 @@
+Parameters: 
+  WebhookPipeline: 
+    Type: String
+    Default: ems-email-adapter-lambda-pipeline
+
+Resources:
+    Webhook: 
+      Type: 'AWS::CodePipeline::Webhook' 
+      Properties:
+        AuthenticationConfiguration: 
+          SecretToken: 7f7caa9484344327fd7527d133be0eb8edf2ca56
+        Filters: 
+        - JsonPath: "$.ref" 
+          MatchEquals: refs/heads/{Branch} 
+        Authentication: GITHUB_HMAC 
+        TargetPipeline: !Ref WebhookPipeline
+        TargetAction: Source 
+        Name: MyWebhook 
+        TargetPipelineVersion: 1
+        RegisterWithThirdParty: 'true'
